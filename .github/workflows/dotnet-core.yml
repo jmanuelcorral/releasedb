@@ -20,7 +20,7 @@ jobs:
     - name: Install dependencies
       run: dotnet restore ./code/src/releasedb/releasedb.csproj
     - name: Build
-      run: dotnet build --configuration Release --no-restore ./code/src/releasedb.sln
+      run: dotnet build --configuration Release --no-restore ./code/releasedb.sln
     - name: Pack
       run: dotnet pack ./code/src/releasedb.sln  -o .
     - name: Push
