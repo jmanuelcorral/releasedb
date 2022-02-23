@@ -5,7 +5,21 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>releasedb</ToolCommandName>
+    <PackageOutputPath>./nupkg</PackageOutputPath>
+    <Authors>jmanuelcorral</Authors>
+    <Description>A cli sql script runner</Description>
+    <PackageProjectUrl>https://github.com/jmanuelcorral/releasedb</PackageProjectUrl>
+    <PackageLicenseExpression></PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/jmanuelcorral/releasedb</RepositoryUrl>
+    <PackageTags>sql dotnet commandline utility</PackageTags>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Version>1.0.0</Version>
+    <PackageReleaseNotes>First Version.</PackageReleaseNotes>
   </PropertyGroup>
+
+
 	<ItemGroup>
 	  <Folder Include="nupkg\" />
 		<None Include="..\..\..\LICENSE">
