@@ -1,0 +1,29 @@
+name: .NET Core
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Install dependencies
+      run: dotnet restore ./code/src/releasedb/releasedb.csproj
+    - name: Build
+      run: dotnet build --configuration Release --no-restore ./code/src/releasedb.sln
+    - name: Pack
+      run: dotnet pack ./code/src/releasedb.sln  -o .
+    - name: Push
+      env:
+        API_KEY: ${{ secrets.ApiKey }}
+      run: dotnet nuget push ./code/releasedb.*.nupkg -k $API_KEY --source https://api.nuget.org/v3/index.json --skip-duplicate
