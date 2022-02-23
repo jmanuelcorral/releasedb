@@ -22,7 +22,7 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore ./code/releasedb.sln
     - name: Pack
-      run: dotnet pack ./code/src/releasedb.sln  -o .
+      run: dotnet pack ./code/releasedb.sln  -o .
     - name: Push
       env:
         API_KEY: ${{ secrets.ApiKey }}
