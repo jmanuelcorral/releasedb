@@ -26,4 +26,4 @@ jobs:
     - name: Push
       env:
         API_KEY: ${{ secrets.ApiKey }}
-      run: dotnet nuget push ./code/releasedb.*.nupkg -k $API_KEY --source https://api.nuget.org/v3/index.json --skip-duplicate
+      run: dotnet nuget push ./releasedb.*.nupkg -k $API_KEY --source https://api.nuget.org/v3/index.json --skip-duplicate
