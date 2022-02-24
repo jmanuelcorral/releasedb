@@ -30,7 +30,7 @@ public class Program
 
     private int PrintResultInConsole(DatabaseUpgradeResult result)
     {
-        if (result.Successful)
+        if (!result.Successful)
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Error Processing DDL: {result.Error}");
