@@ -1,6 +1,7 @@
 ﻿using CommandDotNet;
 using DbUp;
 using DbUp.Engine;
+using DbUp.Helpers;
 
 public class Program
 {
@@ -46,6 +47,7 @@ public class Program
                .SqlDatabase(connectionString)
                .WithScriptsFromFileSystem(scriptFolder)
                .LogToConsole()
+               .JournalTo(new NullJournal())
                .Build();
 
         return ddlupgrade.PerformUpgrade();

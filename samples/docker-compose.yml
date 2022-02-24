@@ -1,0 +1,31 @@
+version: "3.7"
+
+services:
+  sqlrunner:
+    container_name: releasedb
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./sqlscripts:/sqlscripts:ro
+    depends_on:
+      sql:
+        condition: service_healthy
+    entrypoint: ["releasedb", "Upgrade", "Server=sql,1433;Database=master;User Id=sa;Password=P@ssw0rd!;", "/sqlscripts/ddl", "/sqlscripts/dml"]
+  sql:
+    image: mcr.microsoft.com/mssql/server:2019-CU5-ubuntu-16.04
+    container_name: sql
+    ports:
+      - "5433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "P@ssw0rd!"
+      MSSQL_PID: "Developer"
+      MSSQL_SA_PASSWORD: "P@ssw0rd!"
+      MSSQL_AGENT_ENABLED: "false"
+    healthcheck:
+        test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "P@ssw0rd!" -Q "SELECT 1" || exit 1
+        interval: 10s
+        timeout: 3s
+        retries: 10
+        start_period: 10s
