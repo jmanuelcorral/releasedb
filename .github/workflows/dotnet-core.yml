@@ -20,13 +20,7 @@ jobs:
     - name: Install dotnet releaser
       run: dotnet tool install --global dotnet-releaser
 
-    - name: Build
-      run: dotnet build --configuration Release --no-restore ./code/releasedb.sln
-
-    - name: Pack
-      run: dotnet pack ./code/releasedb.sln  -o .
-      
-    - name: Push
+    - name: Generate release
       env:
         API_KEY: ${{ secrets.ApiKey }}
       run: dotnet-releaser run --nuget-token "${{secrets.NUGET_TOKEN}}" --github-token "${{secrets.GITHUB_TOKEN}}" code/dotnet-releaser.toml
