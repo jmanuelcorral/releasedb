@@ -1,0 +1,5 @@
+[msbuild]
+project = "releasedb.sln"
+[github]
+user = "jmanuelcorral"
+repo = "releasedb"
