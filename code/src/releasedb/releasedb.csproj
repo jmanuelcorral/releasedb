@@ -5,18 +5,20 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <NeutralLanguage>en-US</NeutralLanguage>
     <PackAsTool>true</PackAsTool>
+    <PackageTags>releaser;sql;migrations;tool</PackageTags>
     <ToolCommandName>releasedb</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <Authors>jmanuelcorral</Authors>
-    <Description>A cli sql script runner</Description>
+    <Description>A command line sql script runner</Description>
     <PackageProjectUrl>https://github.com/jmanuelcorral/releasedb</PackageProjectUrl>
-    <PackageLicenseExpression></PackageLicenseExpression>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/jmanuelcorral/releasedb</RepositoryUrl>
-    <PackageTags>sql dotnet commandline utility</PackageTags>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Version>1.0.4</Version>
-    <PackageReleaseNotes>First Version.</PackageReleaseNotes>
+    <PackageReadmeFile>..\..\..\README.md</PackageReadmeFile>
+    <PackageReleaseNotes>https://github.com/jmanuelcorral/$(AssemblyName)/blob/main/changelog.md</PackageReleaseNotes>
   </PropertyGroup>
 
 	<ItemGroup>
