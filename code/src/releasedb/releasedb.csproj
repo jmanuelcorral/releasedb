@@ -15,7 +15,7 @@
     <PackageProjectUrl>https://github.com/jmanuelcorral/releasedb</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/jmanuelcorral/releasedb</RepositoryUrl>
-    <PackageReadmeFile>https://raw.githubusercontent.com/jmanuelcorral/$(AssemblyName)/main/README.md</PackageReadmeFile>
+    <PackageReadmeFile>..\..\..\README.md</PackageReadmeFile>
     <PackageReleaseNotes>https://github.com/jmanuelcorral/$(AssemblyName)/blob/main/changelog.md</PackageReleaseNotes>
   </PropertyGroup>
 
