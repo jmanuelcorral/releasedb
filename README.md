@@ -8,14 +8,18 @@ A sql script runner command line tool
 
 If you like or are using this utility, please give it a star. Thanks!
 
+## Breaking Changes
+
+From version 2 and future releases we will use journaling on database updates, the scripts now doesn't need to be idempotent, and we will not separate ddl from dml
+
 ## Sample usage
 
 
 ```powershell
-> releasedb "connectionstring" .\ddlFolder .\dmlFolder
+> releasedb "connectionstring" .\yourScriptsFolder
 ```
 
-With this tool you can update a sql database with a list of scripts. The tool at this moment doesn't use journaling, this causes a 
+With this tool you can update a sql database with a list of scripts. The tool launch these scripts in order.
 
 
 ## How to install
@@ -23,7 +27,7 @@ With this tool you can update a sql database with a list of scripts. The tool at
 At the moment, we have packaged the solution as a dotnet global tool. You only need dotnet core (2, 3 or NET5) installed in your machine and install as a global tool typing:
 
 ```powershell
->   dotnet tool install --global releasedb
+>   dotnet tool install --global releasedb 
 ```
 
 If you don't want or have dotnet tooling, you also can install downloading a valid version from [releases](https://github.com/jmanuelcorral/releasedb/releases).
