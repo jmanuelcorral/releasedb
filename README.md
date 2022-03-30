@@ -27,7 +27,7 @@ With this tool you can update a sql database with a list of scripts. The tool la
 At the moment, we have packaged the solution as a dotnet global tool. You only need dotnet core (2, 3 or NET5) installed in your machine and install as a global tool typing:
 
 ```powershell
->   dotnet tool install --global releasedb 
+>   dotnet tool install --global releasedb
 ```
 
 If you don't want or have dotnet tooling, you also can install downloading a valid version from [releases](https://github.com/jmanuelcorral/releasedb/releases).
