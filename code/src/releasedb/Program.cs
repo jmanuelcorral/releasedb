@@ -11,21 +11,12 @@ public class Program
     }
 
     [Command("Upgrade",
-    Usage = "Upgrade <connectionstring> <ddl folder> [dml folder]",
-    Description = "Execute scripts located in ddl folder and in ddl folder if exist",
+    Usage = "Upgrade <connectionstring> <scripts folder>",
+    Description = "Execute scripts located in the scripts folder.",
     ExtendedHelpText = "more details and examples could be provided here")]
-    public int Upgrade(string connectionString, string dmlfolder, string ddlfolder)
+    public int Upgrade(string connectionString, string scriptFolder, string ddlfolder)
     {
-        var result = UpgradeDb(connectionString, dmlfolder);
-        if (result.Successful)
-        {
-            var ddlresult = UpgradeDb(connectionString, ddlfolder);
-            return PrintResultInConsole(ddlresult);
-        }
-        else
-        {
-            return PrintResultInConsole(result);
-        }
+        return PrintResultInConsole(UpgradeDb(connectionString, scriptFolder));
     }
 
     private int PrintResultInConsole(DatabaseUpgradeResult result)
@@ -33,21 +24,25 @@ public class Program
         if (!result.Successful)
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"Error Processing DDL: {result.Error}");
+            Console.WriteLine($"❌ Error Executing Scripts: {result.Error}");
             Console.ResetColor();
             return -1;
         }
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine("🚀 Success!");
+        Console.ResetColor();
         return 0;
+        
     }
 
     private DatabaseUpgradeResult UpgradeDb(string connectionString, string scriptFolder)
     {
+        EnsureDatabase.For.SqlDatabase(connectionString);
         var ddlupgrade =
            DeployChanges.To
                .SqlDatabase(connectionString)
                .WithScriptsFromFileSystem(scriptFolder)
                .LogToConsole()
-               .JournalTo(new NullJournal())
                .Build();
 
         return ddlupgrade.PerformUpgrade();

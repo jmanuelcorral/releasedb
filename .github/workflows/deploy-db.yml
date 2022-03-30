@@ -1,0 +1,70 @@
+name: Deploy Database
+on:
+  workflow_dispatch:
+    inputs:
+      ENVIRONMENT:
+        description: 'Environment to deploy'
+        required: true
+        default: 'dev'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    
+    - name: Ensure slot is present
+      id: envs
+      env:
+        REF: ${{ github.head_ref || github.ref_name }}
+      run: |
+        envs="${{ github.event.inputs.ENVIRONMENT }}"
+        if [ -z "${envs}" ]; then
+          if [ "${{ github.event.pull_request.merged }}" == "true" ]; then
+            envs="dev"
+          else
+            envs=$(basename "${REF}")
+          fi
+        fi
+        echo "::set-output name=envs::${envs}"
+
+    - name: Validate Environment
+      id: validate-environment
+      uses: ./.github/actions/deployment/validate-slots
+      with:
+        environment: ${{ steps.slot.outputs.envs }}
+        strategy: ${{ github.event.inputs.STRATEGY }}
+
+    - name: Add comment when the the env is not valid
+      if: ${{ github.event.inputs.ENVIRONMENT != '' && steps.validate-slots.outputs.error-message != '' }}
+      uses: ./.github/actions/add-comment
+      with:
+        issue-number: '${{ github.event.inputs.ISSUE_NUMBER }}'
+        body: |
+          #### :x: An error has ocurred validating the environment.
+           ${{ steps.validate-environment.outputs.error-message }}
+           See the [workflow log](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) for more details.
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+    - name: Stop if slots are not valid
+      if: ${{ steps.validate-slots.outputs.is-valid != 'true' }}
+      run: |
+        echo "::error ::Error validating the slots. ${{ steps.validate-slots.outputs.error-message }}"
+        exit 1
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Install dotnet releaser
+      run: dotnet tool install --global dotnet-releaser
+
+    - name: Generate release
+      env:
+        API_KEY: ${{ secrets.ApiKey }}
+      run: dotnet-releaser run --nuget-token "${{secrets.NUGET_TOKEN}}" --github-token "${{secrets.GITHUB_TOKEN}}" code/dotnet-releaser.toml
