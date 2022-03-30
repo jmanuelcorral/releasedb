@@ -6,4 +6,4 @@ repo = "releasedb"
 
 [nuget]
 source = "https://api.nuget.org/v3/index.json"
-publish = true
+publish = true 
