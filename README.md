@@ -14,9 +14,18 @@ From version 2 and future releases we will use journaling on database updates, t
 
 ## Sample usage
 
-
+if is the case that you are using an SQL Database with a "standard" connectionstring
 ```powershell
-> releasedb "connectionstring" .\yourScriptsFolder
+> releasedb Upgrade -c "connectionstring" --ScriptsFolder .\yourScriptsFolder
+```
+
+Or maybe you need to connect your database with an SPN created in your Azure Active Directory:
+```powershell
+> releasedb Upgrade -c "Server=tcp:yourserver.database.windows.net,1433;Initial Catalog=yourdatabase;Persist Security Info=False;MultipleActiveResultSets=False;Encrypt=True;Connection Timeout=30;" 
+-t "Your tenantId"
+--ClientId "Your SPN ClientID" 
+--ClientSecretKey "Your SPN Client Secret" 
+--ScriptsFolder .\yourScriptsFolder
 ```
 
 With this tool you can update a sql database with a list of scripts. The tool launch these scripts in order.
