@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "releasedb": {
+      "commandName": "Project"
+    }
+  }
+}
