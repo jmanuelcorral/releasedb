@@ -1,46 +1,56 @@
 ﻿using CommandDotNet;
 using DbUp;
 using DbUp.Engine;
-using DbUp.Helpers;
+using DbUp.Engine.Transactions;
+using DbUp.SqlServer;
+using releasedb;
+using Spectre.Console;
 
 public class Program
 {
     static int Main(string[] args)
     {
+        AnsiConsole.Write(new FigletText("ReleaseDB")
+        .LeftAligned()
+        .Color(Color.Red));
+        
         return new AppRunner<Program>().Run(args);
     }
 
     [Command("Upgrade",
-    Usage = "Upgrade <connectionstring> <scripts folder>",
-    Description = "Execute scripts located in the scripts folder.",
-    ExtendedHelpText = "more details and examples could be provided here")]
-    public int Upgrade(string connectionString, string scriptFolder, string ddlfolder)
+    Usage = "Upgrade -c <Connectionstring> -t <AADTenantId> --ClientId <ClientId> --ClientSecretKey <clientSecretKey> --ScriptsFolder <ScriptsFolder>",
+    Description = "Conects to an Azure SQL Database and execute scripts located in the scripts folder.")]
+    public int Upgrade(UpgradeArguments arguments)
     {
-        return PrintResultInConsole(UpgradeDb(connectionString, scriptFolder));
+        IConnectionManager connectionManager;
+        if (isAzureSQLConnection(arguments))
+            connectionManager = new AzureDbSQLConnectionManager(arguments.ConnectionString, arguments.AADTenantId, arguments.ClientId, arguments.ClientSecretKey);
+        else
+            connectionManager = new SqlConnectionManager(arguments.ConnectionString);
+        return PrintResultInConsole(UpgradeDb(connectionManager, arguments.ScriptsFolder));
     }
+
+    private bool isAzureSQLConnection(UpgradeArguments arguments) => !String.IsNullOrEmpty(arguments.AADTenantId);
+
 
     private int PrintResultInConsole(DatabaseUpgradeResult result)
     {
         if (!result.Successful)
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"❌ Error Executing Scripts: {result.Error}");
-            Console.ResetColor();
+            AnsiConsole.MarkupLine($"{Emoji.Known.CrossMark} [red] Error Executing Scripts: {result.Error}[/]");
             return -1;
         }
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("🚀 Success!");
-        Console.ResetColor();
+        AnsiConsole.MarkupLine($"{Emoji.Known.Rocket} [green] Success![/]");
         return 0;
         
     }
 
-    private DatabaseUpgradeResult UpgradeDb(string connectionString, string scriptFolder)
+    private DatabaseUpgradeResult UpgradeDb(IConnectionManager connection, string scriptFolder)
     {
-        EnsureDatabase.For.SqlDatabase(connectionString);
+        
         var ddlupgrade =
            DeployChanges.To
-               .SqlDatabase(connectionString)
+               .SqlDatabase(connection)
                .WithScriptsFromFileSystem(scriptFolder)
                .LogToConsole()
                .Build();
